@@ -11,10 +11,11 @@ const mainController = {
       })
       .catch((error) => console.log(error));
   },
-  bookDetail: (req, res) => {
-    // Implement look for details in the database
-    res.render('bookDetail');
-  },
+  bookDetail:async (req, res) => {
+    let book = await db.Book.findByPk(req.params.id,{include:[{association:"authors"}]});
+    let authors = await db.Author.findByPk(req.params.id)
+    return res.render('bookDetail', { book: book, authors: authors})
+},
   bookSearch: (req, res) => {
     res.render('search', { books: [] });
   },
