@@ -16,6 +16,7 @@ const mainController = {
       .catch((error) => console.log(error));
   },
   bookDetail:async (req, res) => {
+    //Punto 1: Renderizar detalles
     let book = await db.Book.findByPk(req.params.id,{include:[{association:"authors"}]});
     let authors = await db.Author.findByPk(req.params.id)
     return res.render('bookDetail', { book: book, authors: authors})
@@ -24,7 +25,7 @@ const mainController = {
     res.render("search", { books: []});
   },
   bookSearchResult: (req, res) => {
-    // Implement search by title
+    //Punto 2: Búsqueda por título
     db.Book.findAll({
       where: {
         title: {[Op.like]: `%${req.body.title}%`}
@@ -45,9 +46,13 @@ const mainController = {
       })
       .catch((error) => console.log(error));
   },
-  authorBooks: (req, res) => {
-    // Implement books by author
-    res.render('authorBooks');
+  authorBooks: async(req, res) => {
+    //Punto 3: Libros de un autor
+    db.Author.findByPk(req.params.id, {
+      include: [{ association: 'books' }]
+    }).then(result =>
+      res.render('authorBooks', {books: result.books}))
+  .catch((error) => console.log(error))
   },
   register: (req, res) => {
     res.render('register');
