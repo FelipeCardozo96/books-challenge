@@ -48,9 +48,8 @@ const mainController = {
   },
   authorBooks: async(req, res) => {
     //Punto 3: Libros de un autor
-    db.Author.findByPk(req.params.id, {
-      include: [{ association: 'books' }]
-    }).then(result =>
+    db.Author.findByPk(req.params.id, {include: [{ association: 'books' }]})
+      .then(result =>
       res.render('authorBooks', {books: result.books}))
   .catch((error) => console.log(error))
   },
@@ -79,12 +78,35 @@ const mainController = {
     res.render('home');
   },
   edit: (req, res) => {
-    // Implement edit book
-    res.render('editBook', {id: req.params.id})
+    // Punto 4: Implementar edit de libros
+    db.Book.findByPk(req.params.id).then(book => {
+      const {id, title, description, cover} = book;
+      res.render('editBook', {id, title, description, cover})
+    })
   },
   processEdit: (req, res) => {
-    // Implement edit book
-    res.render('home');
+    // Punto 4: Implementar edit de libros
+    const {title, cover, description} = req.body;
+    if(title && cover && description) {
+      db.Book.update({title, cover, description}, {where:{id: req.params.id}})
+      .then(() => db.Book.findAll({include: [{ association: 'authors' }]}))
+      .then((books) => res.redirect('/'));
+      return;
+    }
+    let errors = {}
+    if(!title){
+      errors.title = {msg: "Es necesario que coloques un título"}
+    }
+    if(!cover){
+      errors.cover = {msg: "Por favor, selecciona una imágen para el libro"}
+    }
+    if(!description){
+      errors.description = {msg: "Por favor, escribe una descripción"}
+    }
+    db.Book.findByPk(req.params.id).then(book => {
+      const {id, title, description, cover} = book;
+      res.render('editBook', {id, title, description, cover, errors})
+    })
   }
 };
 
