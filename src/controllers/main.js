@@ -36,9 +36,14 @@ const mainController = {
   },
 
   deleteBook: (req, res) => {
-    // Implement delete book
-    res.render('home');
-  },
+    // Punto 5: Eliminación de libros
+    db.Book.destroy({
+      where: {
+        id: req.params.id
+      }
+    })
+    res.redirect('/')
+    },
   authors: (req, res) => {
     db.Author.findAll()
       .then((authors) => {
