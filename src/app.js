@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(methodOverride('_method'));
 app.use(cookieParser())
 app.use(session({secret: 'booksApp'}));
-app.use(cookieMiddleware);
+app.use(cookiesMiddleware);
 app.use(sessionMiddleware);
 
 app.set('view engine', 'ejs');
