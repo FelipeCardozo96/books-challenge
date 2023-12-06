@@ -75,11 +75,35 @@ const mainController = {
       .catch((error) => console.log(error));
   },
   login: (req, res) => {
-    // Implement login process
+    // Punto 6: Login y logout
     res.render('login');
   },
   processLogin: (req, res) => {
-    // Implement login process
+    // Punto 6: Login y logout
+    const {email, password} = req.body;
+    console.log(email, password);
+    db.User.findOne({
+      where:{
+        email: email
+      }
+    }).then(user =>
+      { if(!user){
+          res.render('login', {errors: {email: {msg: 'Este email no ha sido registrado'}}});
+          return;
+        }
+      const validUser = bcryptjs.compareSync(password, user.Pass)
+        if(validUser){
+          req.session.loggedUser = user;
+          res.cookie('loggedUser', email)
+          res.redirect('/');
+        } else {
+          res.render('login', {errors: {password: {msg: 'Contraseña inválida'}}, email: email});
+        }
+      }
+    )
+  },
+  processLogout: (req, res) => {
+    // Punto 6: Login y logout
     res.render('home');
   },
   edit: (req, res) => {
