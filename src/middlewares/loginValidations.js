@@ -1,18 +1,18 @@
 window.onload = function() {
-    const inputUser = document.querySelector('#user');
-    inputUser.focus();
+    const inputEmail = document.getElementById('email');
+    inputEmail.focus();
     const form = document.querySelector('form');
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         let errores = []
-        
-        if(form.user.value == '') {
-            form.user.classList.remove('.valid');
-            form.user.classList.add('.errors');
+        console.log('hola');
+        if(form.email.value == '') {
+            form.email.classList.remove('.valid');
+            form.email.classList.add('.errors');
             errores.push('El campo "usuario" es obligatorio.');
         } else {
-            form.user.classList.remove('errors');
-            form.user.classList.add('valid');
+            form.email.classList.remove('errors');
+            form.email.classList.add('valid');
         }
         if(form.password.value == '') {
             form.password.classList.remove('.valid');
