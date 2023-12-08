@@ -32,8 +32,8 @@
                         <% } %>
                     </div>
                     <div class="col-md-9 pe-5">
-                      <input type="email" name="email" class="form-control form-control-lg"
-                        placeholder="example@gmail.com" required value="<%= locals.email ? `${email}` : "" %>">
+                      <input type="email" id="email" name="email" class="form-control form-control-lg"
+                        placeholder="ejemplo@gmail.com" required value="<%= locals.email ? `${email}` : "" %>">
                     </div>
                   </div>
                   <hr class="mx-n3">
@@ -48,7 +48,7 @@
 
                     </div>
                     <div class="col-md-9 pe-5">
-                      <input type="password" name="password" class="form-control form-control-lg" required>
+                      <input type="password" name="password" id="password" class="form-control form-control-lg" required>
                     </div>
                   </div>
                   <hr class="mx-n3">
@@ -63,6 +63,7 @@
       </section>
   </div>
   <%- include('partials/footer.ejs') %>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>
