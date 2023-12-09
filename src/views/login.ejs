@@ -73,6 +73,7 @@
   const inputEmail = document.getElementById('email');
   inputEmail.focus();
   const form = document.querySelector('#form');
+  const password = document.getElementById('#password')
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     let errors = [];
@@ -85,10 +86,10 @@
       form.email.classList.remove('errors');
       form.email.classList.add('valid');
     }
-    if (form.password.value == '') {
+    if (form.password.value == '' || form.password.value.length < 7) {
       form.password.classList.remove('.valid');
       form.password.classList.add('.errors');
-      errors.push('El campo "contraseña" es obligatorio.');
+      errors.push('El campo contraseña está vacío o la contraseña es incorrecta.');
     } else {
       form.password.classList.remove('errors');
       form.password.classList.add('valid');

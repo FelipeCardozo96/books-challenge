@@ -144,7 +144,7 @@
         form.email.classList.add('valid');
       }
   
-      if (form.country.value == '' || form.country.value.length < 8) {
+      if (form.country.value == '' || form.country.value.length < 3) {
         form.country.classList.remove('valid');
         form.country.classList.add('errors');
         errores.push('Selecciona un país.');
