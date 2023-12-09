@@ -1,7 +1,7 @@
 window.onload = function() {
     const inputEmail = document.getElementById('email');
     inputEmail.focus();
-    const form = document.querySelector('form');
+    const form = document.querySelector('#form');
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         let errores = []
@@ -9,7 +9,7 @@ window.onload = function() {
         if(form.email.value == '') {
             form.email.classList.remove('.valid');
             form.email.classList.add('.errors');
-            errores.push('El campo "usuario" es obligatorio.');
+            errores.push('El campo "email" es obligatorio.');
         } else {
             form.email.classList.remove('errors');
             form.email.classList.add('valid');

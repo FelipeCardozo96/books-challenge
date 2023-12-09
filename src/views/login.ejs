@@ -19,7 +19,7 @@
           <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-xl-6">
               <h1 class="text-white mb-4">Login </h1>
-              <form action="/users/login" method="POST" class="card" style="border-radius: 15px;">
+              <form action="/users/login" method="POST" class="card" id="form" style="border-radius: 15px;">
                 <div class="card-body">
                   <div class="row align-items-center pt-4 pb-3">
                     <div class="col-md-3 ps-5">
@@ -33,7 +33,7 @@
                     </div>
                     <div class="col-md-9 pe-5">
                       <input type="email" id="email" name="email" class="form-control form-control-lg"
-                        placeholder="ejemplo@gmail.com" required value="<%= locals.email ? `${email}` : "" %>">
+                        placeholder="ejemplo@gmail.com" value="<%= locals.email ? `${email}` : "" %>">
                     </div>
                   </div>
                   <hr class="mx-n3">
@@ -48,12 +48,13 @@
 
                     </div>
                     <div class="col-md-9 pe-5">
-                      <input type="password" name="password" id="password" class="form-control form-control-lg" required>
+                      <input type="password" name="password" id="password" class="form-control form-control-lg">
                     </div>
                   </div>
                   <hr class="mx-n3">
                   <div class="px-5 py-4">
                     <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                    <div class="errores"></div>
                   </div>
                 </div>
               </form>
@@ -64,57 +65,61 @@
   </div>
   <%- include('partials/footer.ejs') %>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-      window.onload = function() {
-    const inputEmail = document.getElementById('email');
-    inputEmail.focus();
-    const form = document.querySelector('form');
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        let errors = []
-        console.log('hola');
-        if(form.email.value == '') {
-            form.email.classList.remove('.valid');
-            form.email.classList.add('.errors');
-            errors.push('El campo "usuario" es obligatorio.');
-        } else {
-            form.email.classList.remove('errors');
-            form.email.classList.add('valid');
-        }
-        if(form.password.value == '') {
-            form.password.classList.remove('.valid');
-            form.password.classList.add('.errors');
-            errors.push('El campo "contraseña" es obligatorio.');
-        } else {
-            form.password.classList.remove('errors');
-            form.password.classList.add('valid');
-        }
-        const ul = document.querySelector('.errors');
+<!--     <script src="/js/loginValidations.js"  type="application/json"></script> -->
 
-        if (errors.length != 0) {
-            ul.innerHTML = ''
-            ul.classList.add('alert-warning');
-            for (let i = 0; i < errors.length; i++) {
-                const error = errors[i];
-                ul.innerHTML += `<li>${error}</li>`;
-            }
-            Swal.fire(
-                {icon : 'error',
-                title : 'Hubo un error!',
-                text : 'Revisa los errores!'
-            }
-            )
-        }else {
-            Swal.fire(
-              'Buen trabajo!',
-              'Te logueaste!',
-              'success'
-            ).then (()=> {
-                form.submit()
-              })
-            }
-          })
-  }
+
+    <script>
+   window.onload = function() {
+  const inputEmail = document.getElementById('email');
+  inputEmail.focus();
+  const form = document.querySelector('#form');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let errors = [];
+    console.log('hola');
+    if (form.email.value == '') {
+      form.email.classList.remove('.valid');
+      form.email.classList.add('.errors');
+      errors.push('El campo "usuario" es obligatorio.');
+    } else {
+      form.email.classList.remove('errors');
+      form.email.classList.add('valid');
+    }
+    if (form.password.value == '') {
+      form.password.classList.remove('.valid');
+      form.password.classList.add('.errors');
+      errors.push('El campo "contraseña" es obligatorio.');
+    } else {
+      form.password.classList.remove('errors');
+      form.password.classList.add('valid');
+    }
+    const ul = document.querySelector('.errores');
+
+    if (errors.length != 0) {
+      ul.innerHTML = '';
+      ul.classList.add('alert-warning');
+      for (let i = 0; i < errors.length; i++) {
+        const error = errors[i];
+        ul.innerHTML += `<li>${error}</li>`;
+      }
+      Swal.fire(
+        {
+          icon: 'error',
+          title: 'Hubo un error!',
+          text: 'Revisa los errores!'
+        }
+      );
+    } else {
+      Swal.fire({
+        title: "Buen trabajo!",
+        text: "Te logueaste!",
+        icon: "success"
+      }).then(() => {
+        form.submit();
+      });
+    }
+  });
+};
     </script>
 </body>
 
