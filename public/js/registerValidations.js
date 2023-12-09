@@ -5,7 +5,6 @@ window.onload = function() {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     let errores = []
-
     if (form.name.value == '' || form.name.value.length < 4) {
       form.name.classList.remove('valid');
       form.name.classList.add('errors');
