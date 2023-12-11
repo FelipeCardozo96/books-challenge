@@ -36,14 +36,19 @@ const mainController = {
   },
 
   deleteBook: (req, res) => {
-    // Punto 5: Eliminación de libros
-    db.Book.destroy({
+    // Punto 5: Borrar libros
+    db.Book.findAll({
+      include: [{ association: "authors" }],
       where: {
-        id: req.params.id
+        id: {
+          [Op.ne]: req.params.id
+        }
       }
     })
-    res.redirect('/')
-    },
+      .then( books => {
+        res.render('home', { books, message: req.session.message })
+      } )
+  },
   authors: (req, res) => {
     db.Author.findAll()
       .then((authors) => {
@@ -104,39 +109,37 @@ const mainController = {
   },
   processLogout: (req, res) => {
     // Punto 6: Login y logout
-    res.render('home');
+    res.clearCookie('loggedUser');
+    req.session.destroy();
+    return res.redirect('/');
   },
+  // Punto 4: Edición de libros
   edit: (req, res) => {
-    // Punto 4: Implementar edit de libros
-    db.Book.findByPk(req.params.id).then(book => {
-      const {id, title, description, cover} = book;
-      res.render('editBook', {id, title, description, cover})
-    })
+    let idLibro = req.params.id;
+    db.Book.findByPk(idLibro).then((book) => {
+      res.render("editBook", { book , message: req.session.message });
+    });
   },
-  processEdit: (req, res) => {
-    // Punto 4: Implementar edit de libros
-    const {title, cover, description} = req.body;
-    if(title && cover && description) {
-      db.Book.update({title, cover, description}, {where:{id: req.params.id}})
-      .then(() => db.Book.findAll({include: [{ association: 'authors' }]}))
-      .then((books) => res.redirect('/'));
-      return;
-    }
-    let errors = {}
-    if(!title){
-      errors.title = {msg: "Es necesario que coloques un título"}
-    }
-    if(!cover){
-      errors.cover = {msg: "Por favor, selecciona una imágen para el libro"}
-    }
-    if(!description){
-      errors.description = {msg: "Por favor, escribe una descripción"}
-    }
-    db.Book.findByPk(req.params.id).then(book => {
-      const {id, title, description, cover} = book;
-      res.render('editBook', {id, title, description, cover, errors})
+  processEdit: async (req, res) => {
+    // Punto 4: Edición de libros
+    const { title, cover, description } = req.body;
+
+    let datosEditados = {title, cover, description};
+
+    db.Book.update(datosEditados, {
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    db.Book.findAll({
+      include: [{ association: "authors" }],
     })
-  }
+      .then((books) => {
+        res.redirect('/')
+      })
+      .catch((error) => console.log(error));
+  },
 };
 
 module.exports = mainController;
