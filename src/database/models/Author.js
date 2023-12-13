@@ -15,7 +15,11 @@ module.exports = (sequelize, dataTypes) => {
   };
   let config = {
     tableName: 'Authors',
-    timestamps: false
+    timestamps: false,
+    paranoid: true,
+    deletedAt: "deleted_at",
+    updatedAt: "updated_at",
+    createdAt: "created_at"
   };
 
   const Author = sequelize.define(alias, cols, config);

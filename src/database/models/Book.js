@@ -20,7 +20,11 @@ module.exports = (sequelize, dataTypes) => {
   };
   let config = {
     tableName: 'books',
-    timestamps: false
+    timestamps: false,
+    paranoid: true,
+    deletedAt: "deleted_at",
+    updatedAt: "updated_at",
+    createdAt: "created_at"
   };
   const Book = sequelize.define(alias, cols, config);
 
@@ -30,7 +34,7 @@ module.exports = (sequelize, dataTypes) => {
       through: 'BooksAuthors',
       foreingKey: 'BookId',
       otherKey: 'AuthorId',
-      timestamps: false
+      timestamps: false,
     });
   };
 

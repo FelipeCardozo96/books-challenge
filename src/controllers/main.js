@@ -35,18 +35,16 @@ const mainController = {
       .catch(error => console.error(error))
   },
 
-  deleteBook: (req, res) => {
+  deleteBook: async (req, res) => {
     // Punto 5: Borrar libros
-    db.Book.findAll({
-      include: [{ association: "authors" }],
-      where: {
-        id: {
-          [Op.ne]: req.params.id
-        }
-      }
-    })
-      .then( books => {
-        res.render('home', { books, message: req.session.message })
+    await db.sequelize.query('DELETE FROM BooksAuthors WHERE BookId = :bookId', {
+      replacements: { bookId: req.params.id },
+      type: db.sequelize.QueryTypes.DELETE,
+    });
+    await db.Book.destroy({
+      where: { id: req.params.id },
+    }).then( books => {
+      res.redirect('/')
       } )
   },
   authors: (req, res) => {
@@ -114,9 +112,9 @@ const mainController = {
     return res.redirect('/');
   },
   // Punto 4: Edición de libros
-  edit: (req, res) => {
+  edit: async (req, res) => {
     let idLibro = req.params.id;
-    db.Book.findByPk(idLibro).then((book) => {
+    await db.Book.findByPk(idLibro).then((book) => {
       res.render("editBook", { book , message: req.session.message });
     });
   },
@@ -126,18 +124,16 @@ const mainController = {
 
     let datosEditados = {title, cover, description};
 
-    db.Book.update(datosEditados, {
+    await db.Book.update(datosEditados, {
       where: {
         id: req.params.id,
       },
     });
-
-    db.Book.findAll({
-      include: [{ association: "authors" }],
+    await db.Book.findByPk(req.params.id,
+      {include: [{ association: 'authors' }]}
+      ).then((book) => {
+      res.redirect("/");
     })
-      .then((books) => {
-        res.redirect('/')
-      })
       .catch((error) => console.log(error));
   },
 };
