@@ -1,6 +1,6 @@
 const db = require('../database/models');
  
-function sessionMiddleware(req, res, next){
+function cookiesMiddleware(req, res, next){
    if(req.cookies.loggedUser && !req.session.loggedUser){
        res.locals.user = req.session.loggedUser;
        db.User.findOne({
@@ -12,4 +12,4 @@ function sessionMiddleware(req, res, next){
    }
    next();
 }
-module.exports = sessionMiddleware;
+module.exports = cookiesMiddleware;
